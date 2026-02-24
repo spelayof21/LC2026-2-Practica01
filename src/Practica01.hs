@@ -8,7 +8,7 @@ data Shape = Circle Float | --representa el radio
             Rectangle Float Float| --representa base y altura
             Triangle Float | --representa un lado
             Trapeze Float Float Float --representa base mayor, base menor y altura
-            deriving (Show)
+            deriving (Show, Eq)
 
 --Funcion que calcula el area de las figuras
 area :: Shape -> Float
@@ -30,13 +30,14 @@ perimeter (Trapeze mayor menor h) = mayor + menor + 2 * sqrt(((mayor - menor) / 
 --Ejercicio 2 (Les toca arreglar el sinonimo)
 type Point = (Float, Float)
 
+
 -- Funcion para calcular la distancia entre dos puntos
 distance :: Point -> Point -> Float
-distance (Point x1 y1) (Point x2 y2) = sqrt((x2 - x1)^2 + (y2 - y1)^2)
+distance (x1, y1) (x2, y2) = sqrt((x2 - x1)^2 + (y2 - y1)^2)
 
 --Funcion para calcular la distancia de un punto al origen
 from0 :: Point -> Float
-from0 (Point x y) = sqrt(x^2 + y^2)
+from0 (x, y) = sqrt(x^2 + y^2)
 
 
 --Ejercicio 3
@@ -52,11 +53,11 @@ data Haskellium = Haskellium {
 son :: Haskellium -> Haskellium -> String -> Haskellium
 son papa mama nombreHijo =
   Haskellium
-  nombreHijo
-  (lastName1 papa)
-  (lastName2 mama)
-  (location papa)
-  (houseShape papa)
+    nombreHijo
+    (lastName1 papa)
+    (lastName1 mama)
+    (location papa)
+    (houseShape papa)
 
 --Funcion para calcular las unidades para construir la casa de un Haskellium
 houseCost :: Haskellium -> Float
@@ -68,11 +69,11 @@ houseCost h =
 
 --Funcion para calcular el tiempo que le toma a un Haskellium para llegar a su trabajo
 timeToWork :: Haskellium -> Float
-timeToWork t =
+timeToWork h =
   let distancia = from0 (location h)
-  in if dist < 300
-        then dist / 30
-        else dist / 70
+  in if distancia < 300
+        then distancia / 30
+        else distancia / 70
 
 --LISTAS Y FUNCIONES
 --Ejercicio 1
@@ -96,13 +97,13 @@ conjuntoPotencia (x:xs) =
 --Implementacion
 
 data OneTwoTree a =
-  Empty
-  | Hoja a
-  | Nodo a (OneTwoTree a) (OneTwoThree a)
+  Void
+  | Node a (OneTwoTree a)
+  | Branch a (OneTwoTree a) (OneTwoTree a)
   deriving (Show)
 
 --Ejercicio 2
 suma :: OneTwoTree Int -> Int
-suma Empty = 0
-suma (Hoja x) = x
-suma (Nodo x izq der) = x + suma izq + suma der
+suma Void = 0
+suma (Node x t) = x + suma t
+suma (Branch x izq der) = x + suma izq + suma der
